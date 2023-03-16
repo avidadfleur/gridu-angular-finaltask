@@ -1,0 +1,30 @@
+.register {
+    width: min-content;
+    margin: 0 auto;
+
+    &__title {
+        margin: 10px auto;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
+
+    &__buttons button {
+        margin-bottom: 30px;
+    }
+
+    &__button {
+        width: min-content;
+        margin: 5px;
+    }
+
+    &__select {
+        margin-bottom: 25px;
+    }
+}

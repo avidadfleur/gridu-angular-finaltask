@@ -1,0 +1,63 @@
+.toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: grid;
+    align-content: center;
+    grid-template-columns: 0.1fr 6fr;
+    background-color: #fe889f;
+    font-weight: 600;
+
+    &__logo {
+        margin: 0 16px;
+    }
+
+    &__nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__home .dropdown-menu {
+        background-color: #fe889f;
+        overflow: hidden;
+    }
+
+    &__home .dropdown-menu .dropdown-item:hover {
+        background-color: #fe889f;
+    }
+
+    a,
+    a:visited,
+    a:hover {
+        color: white;
+        text-decoration: none;
+        margin: 0 8px;
+    }
+
+    a:hover {
+        color: #333;
+    }
+
+    button {
+        margin-right: 20px;
+        font-size: 12px;
+    }
+
+    &__welcome {
+        display: flex;
+        align-items: center;
+        font-weight: 800;
+        font-size: 18px;
+        margin-right: 10px;
+    }
+
+    &__date {
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+    }
+}
+

@@ -1,0 +1,60 @@
+<div class="register">
+    <mat-card>
+        <mat-card-title class="register__title">Create a User</mat-card-title>
+        <mat-card-content>
+            <form class="example-form" [formGroup]="reactiveForm" (ngSubmit)="registerUser()">
+
+                <mat-form-field matTooltip="Due to API limitations, only already registered users can be used for demo purposes." class="example-full-width" appearance="fill">
+                    <mat-label>Select User Id</mat-label>
+                    <mat-select (selectionChange)="onSelected($event.value)">
+                        <mat-option *ngFor="let user of users$ | async" [value]="user.id">{{user.id}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill"> 
+                    <mat-label>First name</mat-label>
+                    <input matInput type="text" placeholder="First name" [formControlName]="'firstName'">
+                </mat-form-field>
+                
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Last name</mat-label>
+                    <input matInput type="text" placeholder="Last name" [formControlName]="'lastName'">
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Email" type="email" [formControlName]="'email'"/>
+                    <mat-error *ngIf="reactiveForm.get('email')?.hasError('email')">Valid email required</mat-error>
+                    <mat-error *ngIf="reactiveForm.get('email')?.hasError('emailDoesNotExists')">Email not in API DB.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Password</mat-label>
+                    <input matInput placeholder="Password" type="password" [formControlName]="'password'"/>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Confirm Password</mat-label>
+                    <mat-error>Passwords don't match</mat-error>
+                    <input matInput placeholder="Confirm Password" type="password" [formControlName]="'confirmPassword'"/>
+                </mat-form-field>
+
+                <div class="register__buttons">
+                    <button 
+                        mat-raised-button 
+                        color="primary" 
+                        type="submit" 
+                        class="register__button" 
+                        *ngIf="reactiveForm.status !== 'PENDING'; else loading"
+                        [disabled]="!reactiveForm.valid">Register</button>
+                    <p>Need to login instead?</p>
+                    <a mat-raised-button color="secondary" class="register__button" (click)="redirectLogin()">Login</a>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

@@ -1,0 +1,52 @@
+<div *ngIf="isLoading === 'loading'" style="display: flex; justify-content: center; align-items: center; background: white; padding-bottom: 40px;">
+    <mat-progress-spinner 
+        color="primary" 
+        mode="indeterminate">
+    </mat-progress-spinner>
+</div>
+
+<p class="profile__header">Allow me to introduce myself!</p>
+
+<mat-card class="example-card profile-card" *ngIf="userData$ | async as user">
+    <mat-card-header>
+        <img mat-card-image src="{{user.avatar}}" alt="Photo of user">
+        <mat-card-title>{{user.first_name}}</mat-card-title>
+        <mat-card-subtitle>{{user.last_name}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <input type="checkbox" [(ngModel)]="show"> <span>Show more information</span>
+      <p *ttIf="show">
+        Lorem ipsum dolor sit amet.
+      </p>
+    </mat-card-content>
+    
+    <mat-card-actions>
+      <div class="profile__rate" *ttIf="show">
+          <p style="margin-bottom: 20px;"><strong>Email:</strong> {{user.email}}</p>
+      </div>
+    </mat-card-actions>
+</mat-card>
+
+<div class='card'>
+  <div class='card-header'>
+    <p>{{title}} </p>
+  </div>
+  <div class="card-body">
+ 
+    <div class="row">
+      <h3>Fahrenheit to Celsius </h3>
+    </div>
+    <div class="row">
+      <p> Fahrenheit : <input type="text" [(ngModel)]="Fahrenheit" /> 
+      Celsius : {{Fahrenheit | tempConverter:'C'}} </p>
+    </div>
+ 
+    <div class="row">
+      <h3>Celsius to Fahrenheit </h3>
+    </div>
+    <div class="row">
+      <p> celsius : <input type="text" [(ngModel)]="Celsius" /> 
+       Fahrenheit : {{Celsius | tempConverter:'F'}} </p>
+    </div>
+  </div>
+</div>

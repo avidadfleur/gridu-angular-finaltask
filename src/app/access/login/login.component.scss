@@ -1,0 +1,29 @@
+.ng-star-inserted {
+    width: 100%;
+}
+
+.login {
+    width: min-content;
+    margin: 0 auto;
+
+    &__title {
+        margin: 10px auto;
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    &__buttons button {
+        margin-bottom: 30px;
+    }
+
+    &__button {
+        width: min-content;
+        margin: 10px;
+    }
+}

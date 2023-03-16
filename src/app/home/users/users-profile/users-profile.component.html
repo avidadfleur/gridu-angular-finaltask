@@ -1,0 +1,31 @@
+<div *ngIf="isLoading === 'loading'" style="display: flex; justify-content: center; align-items: center; background: white; padding-bottom: 40px;">
+    <mat-progress-spinner 
+        color="primary" 
+        mode="indeterminate">
+    </mat-progress-spinner>
+</div>
+
+<p class="user__header">User Presentation Card</p>
+
+<mat-card class="example-card profile-card" *ngIf="userData$ | async as user">
+    <mat-card-header>
+        <img mat-card-image src="{{user.avatar}}" alt="Photo of user">
+        <mat-card-title>{{user.first_name}}</mat-card-title>
+        <mat-card-subtitle>{{user.last_name}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <input type="checkbox" [(ngModel)]="show"> <span>Show more information</span>
+      <p *ttIf="show">
+        Lorem ipsum dolor sit amet.
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="user__rate" *ttIf="show">
+        <p style="margin-bottom: 20px;"><strong>Email:</strong> {{user.email}}</p>
+        <p style="text-align: center;">Rate their work!</p>
+        <rating-input style="text-align: center;"></rating-input>
+      </div>
+    </mat-card-actions>
+</mat-card>
+
+<button class="btn btn-outline-success" [routerLink]="['../', 'users-info']">Go back</button>

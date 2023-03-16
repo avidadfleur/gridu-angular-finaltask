@@ -1,0 +1,32 @@
+<div class="login">
+    <mat-card>
+        <mat-card-title class="login__title">User Login</mat-card-title>
+        <mat-card-content>
+            <form class="example-form" #loginForm="ngForm" (ngSubmit)="loginProceed(loginForm)">
+                
+                <mat-form-field matTooltip="You registered with user #{{selectedUser}}." [matTooltipDisabled]="!selectedUser" class="example-full-width" appearance="fill">
+                    <mat-label>Select User Id</mat-label>
+                    <mat-select (selectionChange)="onSelected($event.value)">
+                        <mat-option *ngFor="let user of users$ | async" [value]="user.id">{{user.id}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Email" type="email" name="email" required ngModel/>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Password</mat-label>
+                    <input matInput placeholder="Password" type="password" name="password" required ngModel/>
+                </mat-form-field>
+
+                <div class="login__buttons">
+                    <button mat-raised-button type="submit" color="primary" class="login__button" [disabled]="!loginForm.valid">Login</button>
+                    <mat-label>Need to register instead?</mat-label>
+                    <a mat-raised-button color="secondary" class="login__button" (click)="redirectRegister()">Register</a>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
