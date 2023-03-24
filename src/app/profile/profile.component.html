@@ -7,11 +7,11 @@
 
 <p class="profile__header">Allow me to introduce myself!</p>
 
-<mat-card class="example-card profile-card" *ngIf="userData$ | async as user">
+<mat-card class="example-card profile-card">
     <mat-card-header>
-        <img mat-card-image src="{{user.avatar}}" alt="Photo of user">
-        <mat-card-title>{{user.first_name}}</mat-card-title>
-        <mat-card-subtitle>{{user.last_name}}</mat-card-subtitle>
+        <img mat-card-image src="{{userData?.avatar}}" alt="Photo of user">
+        <mat-card-title>{{userData?.first_name}}</mat-card-title>
+        <mat-card-subtitle>{{userData?.last_name}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <input type="checkbox" [(ngModel)]="show"> <span>Show more information</span>
@@ -22,7 +22,7 @@
     
     <mat-card-actions>
       <div class="profile__rate" *ttIf="show">
-          <p style="margin-bottom: 20px;"><strong>Email:</strong> {{user.email}}</p>
+          <p style="margin-bottom: 20px;"><strong>Email:</strong> {{userData?.email}}</p>
       </div>
     </mat-card-actions>
 </mat-card>

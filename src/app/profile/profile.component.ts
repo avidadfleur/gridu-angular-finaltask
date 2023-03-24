@@ -1,25 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { UserService } from 'src/app/service/user.service';
 import { IndividualUserData, IsLoading, UserData } from 'src/app/shared/interfaces';
+import { AppState, AppStateStore } from '../service/state/state.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit {
   title = "Check out my temperature Converter!"
   Celsius!: number;
   Fahrenheit!: number;
   show: boolean = false;
 
-  componentDestroyed$: Subject<boolean> = new Subject()
+  userData!: UserData | null;
 
-  readonly userId = parseInt(sessionStorage.getItem('userId')!);
-  userData$!: Observable<UserData>;
   isLoading!: IsLoading;
-  constructor(private http: UserService) {}
+  constructor(private stateStore: AppStateStore) {}
   
   ngOnInit(): void {
     this.isLoading = IsLoading.LOADING;
@@ -27,17 +26,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   loadUserInfo() {
-    this.userData$ = this.http.selectUser(this.userId).pipe(
-      map((data: IndividualUserData) => {
-          this.isLoading = IsLoading.SUCCESS;
-          return data.data;
-      }), takeUntil(this.componentDestroyed$)
+    this.stateStore.appStateStore$.subscribe(
+      (state: AppState) => {
+        this.userData = state.user;
+        this.isLoading = IsLoading.SUCCESS;
+      }
     );
-  }
-
-  ngOnDestroy() {
-    this.componentDestroyed$.next(true)
-    this.componentDestroyed$.complete()
   }
 
 }
