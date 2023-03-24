@@ -8,6 +8,14 @@ import { UserService } from 'src/app/service/user.service';
 import { ValidationService } from 'src/app/service/validate.service';
 import { IndividualUserData, SeveralUserData, UserData } from 'src/app/shared/interfaces';
 
+interface FormInterface {
+  firstName: FormControl<string | null>;
+  lastName: FormControl<string | null>;
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+  confirmPassword: FormControl<string | null>;
+}
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -31,7 +39,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     sessionStorage.clear();
 
-    this.reactiveForm = new FormGroup({
+    this.reactiveForm = new FormGroup<FormInterface>({
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       email: new FormControl(null, [Validators.required, Validators.email], [EmailValidator.createValidator(this.emailService)]),
@@ -44,7 +52,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   loadAllUsers(): void {
-    this.users$ = this.http.getAllUsers().pipe(
+    this.users$ = this.http.getAllUsers(1, 12).pipe(
       map((data: SeveralUserData) => {
           return data.data;
       }), takeUntil(this.componentDestroyed$)

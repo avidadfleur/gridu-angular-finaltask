@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { map, Subject, takeUntil } from 'rxjs';
+import { map, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { UserService } from 'src/app/service/user.service';
 import { UserData, SeveralUserData, IsLoading } from 'src/app/shared/interfaces';
 
@@ -10,35 +10,39 @@ import { UserData, SeveralUserData, IsLoading } from 'src/app/shared/interfaces'
   templateUrl: './users-info.component.html',
   styleUrls: ['./users-info.component.scss']
 })
-export class UsersInfoComponent implements OnInit, OnDestroy {
+export class UsersInfoComponent implements AfterViewInit, OnDestroy {
   displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email', 'avatar', 'rating', 'check'];
-  isLoading!: IsLoading;
+  isLoading: IsLoading = IsLoading.LOADING;
   componentDestroyed$: Subject<boolean> = new Subject();
+
+  data: UserData[] = [];
+  resultsLength: number = 0;
+  pageSize: number = 6;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   
   constructor(private http: UserService) { }
 
-  ngOnInit(): void {
-    this.isLoading = IsLoading.LOADING;
-    this.getAllUsers();
-  }
-
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-
-  UserDetail!: UserData[];
-  data!: MatTableDataSource<UserData>;
-
-  getAllUsers(): void {
-    this.http.getAllUsers().pipe(
-      map((data: SeveralUserData) => {
-        return data.data;
-      }),
-      takeUntil(this.componentDestroyed$)
-    ).subscribe((item: UserData[]) => {
-      this.isLoading = IsLoading.SUCCESS;
-      this.UserDetail = item;
-      this.data = new MatTableDataSource<UserData>(this.UserDetail);
-      this.data.paginator = this.paginator;
-    });
+  ngAfterViewInit(): void {
+    this.paginator.page
+      .pipe(
+        startWith({}),
+        tap(() => {
+          this.isLoading = IsLoading.LOADING;
+        }),
+        switchMap((_: any) => {
+          return this.http.getAllUsers(
+            this.paginator.pageIndex + 1, this.paginator.pageSize
+          )
+        }),
+        takeUntil(this.componentDestroyed$)
+      )
+      .subscribe((result: SeveralUserData) => {
+        this.data = result.data;
+        this.resultsLength = result.total;
+        this.pageSize = result.per_page;
+        this.isLoading = IsLoading.SUCCESS;
+      })
   }
 
   ngOnDestroy() {

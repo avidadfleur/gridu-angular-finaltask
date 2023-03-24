@@ -19,10 +19,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userId = parseInt(sessionStorage.getItem('userId')!);
-    this.loadUser(this.userId);
+    if (this.userId) {
+      this.loadUser(this.userId);
+    }
   }
 
-  loadUser(id: number) {
+  private loadUser(id: number) {
     this.http.selectUser(id).pipe(takeUntil(this.componentDestroyed$))
     .subscribe((item: IndividualUserData) => {
       this.userName = item.data.first_name;

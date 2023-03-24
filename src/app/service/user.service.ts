@@ -25,8 +25,8 @@ export class UserService {
         return sessionStorage.getItem('token') !== null? sessionStorage.getItem('token') : '';
     }
 
-    getAllUsers(): Observable<SeveralUserData> {
-        return this.http.get<SeveralUserData>(`https://reqres.in/api/users?page=1&per_page=12`);
+    getAllUsers(page: number, perPage: number): Observable<SeveralUserData> {
+        return this.http.get<SeveralUserData>(`https://reqres.in/api/users?page=${page}&per_page=${perPage}`);
     }
 
     selectUser(id: number): Observable<IndividualUserData> {

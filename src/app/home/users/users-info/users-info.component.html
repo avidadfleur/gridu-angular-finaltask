@@ -40,8 +40,9 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
     <mat-paginator 
-        [length]="100"
-        [pageSizeOptions]="[5, 10, 20]"
+        [length]="resultsLength"
+        [pageSizeOptions]="[6, 12]"
+        [pageSize]="pageSize"
         showFirstLastButtons
         aria-label="Select page of users">
     </mat-paginator>

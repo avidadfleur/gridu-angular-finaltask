@@ -2,23 +2,26 @@
     <mat-card>
         <mat-card-title class="login__title">User Login</mat-card-title>
         <mat-card-content>
-            <form class="example-form" #loginForm="ngForm" (ngSubmit)="loginProceed(loginForm)">
+            <form class="example-form" [formGroup]="loginForm" (ngSubmit)="loginProceed()">
                 
                 <mat-form-field matTooltip="You registered with user #{{selectedUser}}." [matTooltipDisabled]="!selectedUser" class="example-full-width" appearance="fill">
                     <mat-label>Select User Id</mat-label>
-                    <mat-select (selectionChange)="onSelected($event.value)">
-                        <mat-option *ngFor="let user of users$ | async" [value]="user.id">{{user.id}}</mat-option>
+                    <mat-select (selectionChange)="onSelected($event.value)" [formControlName]="'userId'">
+                        <mat-option *ngFor="let user of users$ | async" [value]="user.id" >{{user.id}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>Email</mat-label>
-                    <input matInput placeholder="Email" type="email" name="email" required ngModel/>
+                    <input matInput placeholder="Email" type="email" name="email" [formControlName]="'email'"/>
+                    <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Valid email required</mat-error>
+                    <mat-error *ngIf="loginForm.get('email')?.hasError('emailDoesNotExists')">Email not in API DB.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>Password</mat-label>
-                    <input matInput placeholder="Password" type="password" name="password" required ngModel/>
+                    <input matInput placeholder="Password" type="password" name="password" [formControlName]="'password'"/>
+                    <mat-error>Must provide password</mat-error>
                 </mat-form-field>
 
                 <div class="login__buttons">

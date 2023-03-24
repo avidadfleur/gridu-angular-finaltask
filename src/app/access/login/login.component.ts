@@ -1,9 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
+import { EmailService } from 'src/app/service/email.service';
+import { EmailValidator } from 'src/app/service/email.validator';
 import { UserService } from 'src/app/service/user.service';
 import { IndividualUserData, SeveralUserData, UserData } from 'src/app/shared/interfaces';
+
+interface FormInterface {
+  userId: FormControl<string | null>;
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+}
 
 @Component({
   selector: 'app-login',
@@ -14,22 +22,28 @@ export class LoginComponent implements OnInit{
   respdata!: any;
   selectedUser!: number;
   users$!: Observable<UserData[]>;
-  userRegistered: boolean = false;
+  loginForm!: FormGroup;
 
-  @ViewChild('loginForm') loginForm!: NgForm;
-
-  constructor(private http: UserService, private router: Router) {}
+  constructor(private http: UserService,
+    private router: Router,
+    private emailService: EmailService) {}
 
   ngOnInit(): void {
     if (sessionStorage.getItem('userId')) {
-      this.userRegistered = true;
       this.selectedUser = parseInt(sessionStorage.getItem('userId')!);
     }
+
+    this.loginForm = new FormGroup<FormInterface>({
+      userId: new FormControl('', Validators.required),
+      email: new FormControl(null, [Validators.required, Validators.email], [EmailValidator.createValidator(this.emailService)]),
+      password: new FormControl('', Validators.required)
+    });
+
     this.loadAllUsers();
   }
 
-  loadAllUsers(): void {
-    this.users$ = this.http.getAllUsers().pipe(
+  private loadAllUsers(): void {
+    this.users$ = this.http.getAllUsers(1, 12).pipe(
       map((data: SeveralUserData) => {
           return data.data;
       })
@@ -45,16 +59,16 @@ export class LoginComponent implements OnInit{
     });
 	}
 
-  loginProceed(logindata: NgForm) {
-    if (logindata.valid) {
-      this.http.loginProceed(logindata.value).subscribe(item => {
+  loginProceed() {
+    if (this.loginForm.valid) {
+      this.http.loginProceed(this.loginForm.value).subscribe(item => {
         this.respdata = item;
         sessionStorage.setItem('userId', (this.selectedUser).toString());
         sessionStorage.setItem('token', this.respdata.token);
         if (this.respdata !== null) {
           this.router.navigate(['']);
         } else {
-          alert('Login failed!')
+          alert('Login failed!');
         }
       })
     }
