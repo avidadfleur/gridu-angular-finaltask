@@ -24,12 +24,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userId = parseInt(sessionStorage.getItem('userId')!);
     if (this.userId) {
       this.loadUser(this.userId);
-
-      this.stateStore.appStateStore$.subscribe(
-        (state: AppState) => {
-          this.user = state.user;
-        }
-      );
     }
   }
 

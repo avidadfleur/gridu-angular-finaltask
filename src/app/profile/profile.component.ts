@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
-import { UserService } from 'src/app/service/user.service';
-import { IndividualUserData, IsLoading, UserData } from 'src/app/shared/interfaces';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { IsLoading, UserData } from 'src/app/shared/interfaces';
 import { AppState, AppStateStore } from '../service/state/state.service';
 
 @Component({
@@ -14,10 +13,11 @@ export class ProfileComponent implements OnInit {
   Celsius!: number;
   Fahrenheit!: number;
   show: boolean = false;
-
   userData!: UserData | null;
-
   isLoading!: IsLoading;
+
+  componentDestroyed$: Subject<boolean> = new Subject();
+
   constructor(private stateStore: AppStateStore) {}
   
   ngOnInit(): void {
@@ -26,12 +26,19 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUserInfo() {
-    this.stateStore.appStateStore$.subscribe(
+    this.stateStore.appStateStore$
+     .pipe(takeUntil(this.componentDestroyed$))
+     .subscribe(
       (state: AppState) => {
         this.userData = state.user;
         this.isLoading = IsLoading.SUCCESS;
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed$.next(true)
+    this.componentDestroyed$.complete()
   }
 
 }
